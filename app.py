@@ -11,29 +11,90 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------
-# ESTILIZAÇÃO CUSTOMIZADA PARA INTERFACE E IMPRESSÃO
+# ESTILIZAÇÃO CUSTOMIZADA PREMIUM (DARK SLATE & ALTO CONTRASTE)
 # ---------------------------------------------------------
 st.markdown("""
 <style>
+    /* Estilo Global Dark Slate */
+    .stApp {
+        background-color: #0f172a;
+        color: #f8fafc;
+    }
+    
+    /* Top Bar & Header Transparent Dark */
+    [data-testid="stHeader"] {
+        background-color: rgba(15, 23, 42, 0.95);
+    }
+    
+    /* Sidebar Escura Elegante */
+    [data-testid="stSidebar"] {
+        background-color: #1e293b;
+        border-right: 1px solid #334155;
+    }
+    
+    /* Cartões de Métricas (st.metric) */
+    [data-testid="stMetric"] {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        padding: 16px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+    [data-testid="stMetricLabel"] {
+        color: #94a3b8 !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+    }
+    [data-testid="stMetricValue"] {
+        color: #38bdf8 !important;
+        font-weight: 700 !important;
+    }
+    [data-testid="stMetricDelta"] {
+        color: #34d399 !important;
+    }
+    
+    /* Estilização das Abas (st.tabs) */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: #1e293b;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #334155;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 45px;
+        background-color: transparent;
+        border-radius: 6px;
+        color: #94a3b8;
+        font-weight: 600;
+        padding: 0px 16px;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #0284c7 !important;
+        color: #ffffff !important;
+    }
+    
+    /* Regras de Impressão (Papel / PDF) */
     @media print {
         body * {
-            visibility: hidden;
+            visibility: hidden !important;
         }
         #secao-impressao, #secao-impressao * {
-            visibility: visible;
+            visibility: visible !important;
+            color: #000000 !important;
+            background-color: #ffffff !important;
         }
         #secao-impressao {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            border: 2px solid #000000 !important;
+            padding: 20px !important;
         }
         .no-print {
             display: none !important;
         }
-    }
-    .stApp {
-        background-color: #f8f9fa;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -144,7 +205,7 @@ horas_esp = st.sidebar.number_input(
 efic_esp = st.sidebar.slider(
     "Eficiência Operacional (%) - Diagnóstico", 
     30, 90, 55,
-    help="A eficiência do especialista é naturally menor (~50% a 60%), pois ele consome mais tempo estudando diagramas elétricos e fazendo medições de bancada antes de faturar a hora."
+    help="A eficiência do especialista é naturalmente menor (~50% a 60%), pois ele consome mais tempo estudando diagramas elétricos e fazendo medições de bancada antes de faturar a hora."
 ) / 100.0
 
 # ---------------------------------------------------------
@@ -214,7 +275,7 @@ with tab1:
 
 # --- ABA 2: GUIA DIDÁTICO DE FORMAÇÃO DO CUSTO ---
 with tab2:
-    st.subheader("📘 Como cada Real é calculated (Guia Didático da Formação do Preço)")
+    st.subheader("📘 Como cada Real é calculado (Guia Didático da Formação do Preço)")
     st.markdown("""
     Esta seção explica a lógica por trás de cada etapa da precificação. O cálculo de uma oficina mecânica não é arbitrário, ele segue a **Engenharia de Custos da Mão de Obra**.
     """)
@@ -243,7 +304,7 @@ with tab2:
 
     with st.expander("4️⃣ A Fórmula do Markup (Margem de Lucro e Impostos)"):
         st.write(f"""
-        O Preço Final (VHT) não é calculado apenas somando a porcentagem ao custo. Ele utiliza o **Divisor de Markup** para garantir que a margem e os impostos incidam sobre o **faturamento bruto final**:
+        O Preço Final (VHT) não é calculated apenas somando a porcentagem ao custo. Ele utiliza o **Divisor de Markup** para garantir que a margem e os impostos incidam sobre o **faturamento bruto final**:
         
         $$\\text{{VHT}} = \\frac{{\\text{{Custo Base por Hora}}}}{{1 - (\\text{{Impostos \\%}} + \\text{{Margem \\%}})}} = \\frac{{\\text{{R\\$ {c_base_geral:.2f}}}}}{{1 - ({impostos_pct:.2f} + {margem_pct:.2f})}} = \\mathbf{{\\text{{R\\$ {vht_geral:.2f}/h}}}}$$
         """)
@@ -271,15 +332,15 @@ with tab3:
         st.markdown("### 👁️ Pré-visualização da Ordem de Serviço")
         
         st.markdown(f"""
-        <div id="secao-impressao" style="border: 2px solid #2C4D75; padding: 20px; border-radius: 8px; background-color: #ffffff;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2C4D75; padding-bottom: 10px;">
+        <div id="secao-impressao" style="border: 2px solid #0284c7; padding: 20px; border-radius: 8px; background-color: #1e293b; color: #f8fafc;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0284c7; padding-bottom: 10px;">
                 <div>
-                    <h2 style="margin:0; color: #1B365D;">AUTO MECÂNICA REPÚBLICA</h2>
-                    <p style="margin:0; font-size: 0.9em; color: #555;">Apoio Educacional Oficial & Oficina Referência</p>
+                    <h2 style="margin:0; color: #38bdf8;">AUTO MECÂNICA REPÚBLICA</h2>
+                    <p style="margin:0; font-size: 0.9em; color: #94a3b8;">Apoio Educacional Oficial & Oficina Referência</p>
                 </div>
                 <div style="text-align: right;">
-                    <h4 style="margin:0; color: #1B365D;">ORÇAMENTO DE SERVIÇOS</h4>
-                    <p style="margin:0; font-size: 0.85em; color: #555;">Tecnologia INFINITUS</p>
+                    <h4 style="margin:0; color: #38bdf8;">ORÇAMENTO DE SERVIÇOS</h4>
+                    <p style="margin:0; font-size: 0.85em; color: #94a3b8;">Tecnologia INFINITUS</p>
                 </div>
             </div>
             
@@ -288,11 +349,11 @@ with tab3:
                 <p><strong>Observações:</strong> {obs_os}</p>
             </div>
             
-            <hr>
+            <hr style="border-color: #334155;">
             
             <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
                 <thead>
-                    <tr style="background-color: #f2f2f2; text-align: left;">
+                    <tr style="background-color: #334155; text-align: left; color: #38bdf8;">
                         <th style="padding: 8px;">Descrição do Item</th>
                         <th style="padding: 8px; text-align: center;">Qtd/Horas</th>
                         <th style="padding: 8px; text-align: right;">Valor Unit.</th>
@@ -301,22 +362,22 @@ with tab3:
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">Mão de Obra Básica (Mecânica Geral)</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center;">{h_basica_os:.1f} h</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">R$ {vht_geral:.2f}</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">R$ {total_mo_basica:.2f}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155;">Mão de Obra Básica (Mecânica Geral)</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155; text-align: center;">{h_basica_os:.1f} h</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155; text-align: right;">R$ {vht_geral:.2f}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155; text-align: right;">R$ {total_mo_basica:.2f}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">Mão de Obra Especializada (Diagnóstico)</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center;">{h_diag_os:.1f} h</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">R$ {vht_esp:.2f}</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">R$ {total_mo_diag:.2f}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155;">Mão de Obra Especializada (Diagnóstico)</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155; text-align: center;">{h_diag_os:.1f} h</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155; text-align: right;">R$ {vht_esp:.2f}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155; text-align: right;">R$ {total_mo_diag:.2f}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">Peças e Componentes Aplicados</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center;">--</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">--</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">R$ {valor_pecas:.2f}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155;">Peças e Componentes Aplicados</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155; text-align: center;">--</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155; text-align: right;">--</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155; text-align: right;">R$ {valor_pecas:.2f}</td>
                     </tr>
                 </tbody>
             </table>
@@ -324,10 +385,10 @@ with tab3:
             <div style="margin-top: 20px; text-align: right; font-size: 1.1em;">
                 <p style="margin: 3px 0;"><strong>Subtotal Mão de Obra:</strong> R$ {total_mo_geral:.2f}</p>
                 <p style="margin: 3px 0;"><strong>Subtotal Peças:</strong> R$ {valor_pecas:.2f}</p>
-                <h3 style="margin: 10px 0 0 0; color: #1B365D;">TOTAL GERAL: R$ {total_orcamento:.2f}</h3>
+                <h3 style="margin: 10px 0 0 0; color: #38bdf8;">TOTAL GERAL: R$ {total_orcamento:.2f}</h3>
             </div>
             
-            <div style="margin-top: 25px; border-top: 1px solid #ccc; pt: 10px; font-size: 0.75em; color: #777; text-align: center;">
+            <div style="margin-top: 25px; border-top: 1px solid #334155; padding-top: 10px; font-size: 0.75em; color: #94a3b8; text-align: center;">
                 <p>Plataforma de Cálculo VHT • Propriedade Intelectual INFINITUS SISTEMAS INTELIGENTES • Patrocínio Auto Mecânica República</p>
             </div>
         </div>
@@ -337,7 +398,7 @@ with tab3:
         components.html(
             """
             <button onclick="window.print()" style="
-                background-color: #1B365D; 
+                background-color: #0284c7; 
                 color: white; 
                 padding: 12px 24px; 
                 border: none; 
@@ -367,7 +428,7 @@ with tab4:
 # ---------------------------------------------------------
 st.divider()
 st.markdown(
-    "<div style='text-align: center; color: #666; font-size: 0.85em;'>"
+    "<div style='text-align: center; color: #94a3b8; font-size: 0.85em;'>"
     "<b>INFINITUS SISTEMAS INTELIGENTES</b> © Todos os direitos reservados • "
     "Patrocínio Oficial: <b>Auto Mecânica República</b>"
     "</div>", 
